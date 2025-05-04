@@ -1,0 +1,6 @@
+transformers
+torch
+openai
+isabelle-client
+func-timeout
+huggingface_hub
