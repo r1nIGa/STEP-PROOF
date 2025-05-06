@@ -10,13 +10,8 @@ import time
 from func_timeout import func_set_timeout
 from huggingface_hub import login
 
-# Set up your Isabelle root path, such as '~/Isabelle2024/bin'
-os.environ['PATH'] += ':/home/xiaolin/Isabelle2024/bin'
-
-# Set up your huggingface access token, accessing permission of llama3 can be find in https://huggingface.co/meta-llama/Meta-Llama-3-8B
-access_token = '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'
-# Connected to your huggingface account
-login(token=access_token)
+ACCESS_TOKEN = None
+access_token = ACCESS_TOKEN
 
 # Check if gpu is available
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -373,7 +368,7 @@ class Checker:
         # Upload formal content into checker
         with open(f'TEMP.thy', 'w', encoding='utf-8') as f:
             body = formal
-            head = "theory TEMP\nimports Main\nbegin\n"
+            head = "theory TEMP\nimports Complex_Main\nbegin\n"
             tail = "\nend"
             content = head + body + tail
             f.writelines(content)
@@ -384,6 +379,7 @@ class Checker:
         response = json.loads(response)
         nodes = response['nodes'][0]
         messages = nodes['messages']
+        print(messages)
         if response['ok']:
             print('Proof succeed!')
             return 0
@@ -406,7 +402,7 @@ class Checker:
         with open(f'TEMP.thy', 'w', encoding='utf-8') as f:
             f.writelines(lines)
 
-    @func_set_timeout(900)
+    # @func_set_timeout(900)
     def check(self):
         # Formal content verification
 
